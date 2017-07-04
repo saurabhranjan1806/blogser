@@ -1,0 +1,58 @@
+{% extends 'login/header.html' %}
+
+{% block title %}
+Blogser
+{% endblock %}
+{% block navbar %}
+<form class="navbar-form navbar-left" action="/loggedIn/search_query/" method="post">{% csrf_token %}
+	<div class="form-group">
+	    <input type="text" class="form-control" placeholder="Search" name="search_box" id="search_box">
+	</div>
+	<button type="submit" class="btn btn-default">Submit</button>
+</form>
+<li><a href="/logout/">logout</a></li>
+{% endblock %}
+
+
+
+
+{% block content %}
+
+<div>		
+	<h2> hi...{{ fullname }}..! You are Logged in</h2>
+	<p>click <a href="/logout/">here</a> to logout.</p>
+</div>
+
+<div style="margin-left:300px">
+{% if form %}
+<form action="" method="post" enctype = "multipart/form-data" >
+	    {% csrf_token %}
+	    {{ form.as_ul }}
+
+	    <!-- {{form.title}}<br><br>
+	    {{form.content}}<br><br> -->
+	    <button type="submit">Insert</button>
+</form><hr><br>
+{% endif %}
+
+<p>
+	{% for i in t %}
+		<h5>{{i.username}}  </h5><h2> {{i.title}}</h2><h4><small>&nbsp;&nbsp;{{i.date|timesince}} ago</small></h4><br>
+		<p>{{i.content}}</p><br>
+		{% if i.picture %}
+		<!-- {{i.picture.url}} -->
+		<img src="{{i.picture.url}}" width="200px" height="200px"><br>
+		{% endif %}
+
+		{% ifequal i.username request.user %}
+		<a href="{% url 'delete' i.id %}">delete</a><br><br><hr>
+		{% endifequal %}
+	{% endfor %}
+</p>
+
+
+
+<a href="/logout/">logout</a>
+</div>
+
+{% endblock %}
